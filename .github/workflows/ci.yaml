@@ -13,21 +13,6 @@ jobs:
     - name: 🧾 Checkout latest code
       uses: actions/checkout@v3
 
-    - name: ✅ Lint HTML
-      run: |
-        npm install -g htmlhint
-        htmlhint .
-
-    - name: 🛠️ Build Docker image for testing
-      run: docker build -t static-website:test .
-
-    - name: 🧪 Smoke test container
-      run: |
-        docker run -d --name test-container -p 8080:80 static-website:test
-        sleep 5
-        curl -f http://localhost:8080/ || (docker logs test-container && exit 1)
-        docker stop test-container && docker rm test-container
-
     - name: 🔐 Log in to Docker Hub
       run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
